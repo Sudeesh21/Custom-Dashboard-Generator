@@ -1,2 +1,2 @@
 # Custom-Dashboard-Generator
-A real-time custom monitoring dashboard with automated alerting for CPU, memory, disk, and network metrics using Grafana, Prometheus, and Windows Exporter.
+A real-time system monitoring and alerting dashboard built using Grafana, Prometheus, and Windows Exporter, with integrated AI-based prediction for disk usage trends. This project provides detailed insights into system performance and automates alerting for critical metrics such as CPU, memory, disk, and network utilization.
