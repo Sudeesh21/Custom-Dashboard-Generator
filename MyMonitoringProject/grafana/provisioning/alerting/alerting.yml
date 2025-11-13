@@ -1,0 +1,277 @@
+apiVersion: 1
+
+groups:
+  - orgId: 1
+    name: SystemAlerts
+    folder: Alerts
+    interval: 1m
+    rules:
+
+      # ---------------------------------------------------------------------
+      # 1. High CPU Usage
+      # ---------------------------------------------------------------------
+      - uid: cpu_usage_high
+        title: High CPU Usage
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: Prometheus
+            model:
+              expr: 100 - (avg(rate(windows_cpu_time_total{job="windows-pc", mode="idle"}[5m])) * 100)
+              format: time_series
+              interval: ""
+              intervalFactor: 2
+              legendFormat: "CPU Usage"
+              refId: A
+
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              type: reduce
+              expression: A
+              reducer: last
+              refId: B
+
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              type: threshold
+              expression: B
+              conditions:
+                - evaluator:
+                    type: gt
+                    params: [80]
+                  type: query
+              refId: C
+        noDataState: NoData
+        execErrState: Error
+        for: 2m
+        annotations:
+          summary: "CPU usage is above 80%"
+          description: "Instance has high CPU usage for more than 2 minutes."
+# ---------------------------------------------------------------------
+      # 2. High Memory Usage (RECTIFIED)
+      # ---------------------------------------------------------------------
+      - uid: memory_usage_high
+        title: High Memory Usage
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: Prometheus
+            model:
+              # --- THIS IS THE RECTIFIED LINE ---
+              expr: 100 * (1 - (windows_memory_available_bytes{job="windows-pc"} / windows_memory_physical_total_bytes{job="windows-pc"}))
+              format: time_series
+              legendFormat: "Memory Usage"
+              refId: A
+
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              type: reduce
+              expression: A
+              reducer: last
+              refId: B
+
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              type: threshold
+              expression: B
+              conditions:
+                - evaluator:
+                    type: gt
+                    params: [95] # Fire if usage is > 85%
+                  type: query
+              refId: C
+        noDataState: NoData
+        execErrState: Error
+        for: 2m
+        annotations:
+          summary: "Memory usage above 85%"
+          description: "System physical memory usage has exceeded 85% for more than 2 minutes."
+
+      # ---------------------------------------------------------------------
+      # 3. High Disk Usage
+      # ---------------------------------------------------------------------
+      - uid: disk_usage_high
+        title: High Disk Usage
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: Prometheus
+            model:
+              expr: 100 - (avg(windows_logical_disk_free_bytes{job="windows-pc", volume="C:"}) / avg(windows_logical_disk_size_bytes{job="windows-pc", volume="C:"})) * 100
+              format: time_series
+              legendFormat: "Disk Usage"
+              refId: A
+
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              type: reduce
+              expression: A
+              reducer: last
+              refId: B
+
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              type: threshold
+              expression: B
+              conditions:
+                - evaluator:
+                    type: gt
+                    params: [90]
+                  type: query
+              refId: C
+        noDataState: NoData
+        execErrState: Error
+        for: 2m
+        annotations:
+          summary: "Disk usage above 90%"
+          description: "Drive C: has less than 10% free space remaining."
+
+
+      # ---------------------------------------------------------------------
+      # 4. High Network Utilization
+      # ---------------------------------------------------------------------
+      - uid: network_usage_high
+        title: High Network Utilization
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: Prometheus
+            model:
+              expr: avg(rate(windows_net_bytes_total{job="windows-pc"}[5m])) / 1000000
+              format: time_series
+              legendFormat: "Network Throughput (MB/s)"
+              refId: A
+
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              type: reduce
+              expression: A
+              reducer: last
+              refId: B
+
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              type: threshold
+              expression: B
+              conditions:
+                - evaluator:
+                    type: gt
+                    params: [100]
+                  type: query
+              refId: C
+        noDataState: NoData
+        execErrState: Error
+        for: 2m
+        annotations:
+          summary: "High Network Traffic"
+          description: "Average network throughput has exceeded 100 MB/s."
+
+
+      # ---------------------------------------------------------------------
+      # 5. High System Load (Processor Queue Length)
+      # ---------------------------------------------------------------------
+      - uid: system_load_high
+        title: High System Load
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: Prometheus
+            model:
+              expr: avg(windows_system_processor_queue_length{job="windows-pc"})
+              format: time_series
+              legendFormat: "Processor Queue Length"
+              refId: A
+
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              type: reduce
+              expression: A
+              reducer: last
+              refId: B
+
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              type: threshold
+              expression: B
+              conditions:
+                - evaluator:
+                    type: gt
+                    params: [5]
+                  type: query
+              refId: C
+        noDataState: NoData
+        execErrState: Error
+        for: 2m
+        annotations:
+          summary: "High System Load"
+          description: "Processor queue length exceeded threshold for more than 2 minutes."
+
+      # ---------------------------------------------------------------------
+      # 6. Disk Usage PREDICTION
+      # ---------------------------------------------------------------------
+      - uid: disk_usage_prediction
+        title: "Disk Will Be Full Soon!"
+        condition: C # Fire if the prediction is true
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: Prometheus
+            model:
+              # This metric matches what predictor.py pushes to Pushgateway
+              expr: disk_percentage_predicted_in_15_min
+              format: time_series
+              legendFormat: "Predicted Usage"
+              refId: A
+
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              type: reduce
+              expression: A
+              reducer: last
+              refId: B
+
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              type: threshold
+              expression: B
+              conditions:
+                - evaluator:
+                    type: gt
+                    params: [95] # Alert if predicted usage is > 95%
+                  type: query
+              refId: C
+        noDataState: NoData
+        execErrState: Error
+        for: 1m # Alert immediately
+        annotations:
+          summary: "Disk usage will exceed 95% in 15 minutes!"
+          description: "At the current rate, drive C: will reach high usage soon. Predicted usage: {{ $values.B.Value | printf '%.2f' }}%."

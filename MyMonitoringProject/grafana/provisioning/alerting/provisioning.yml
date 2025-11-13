@@ -1,0 +1,9 @@
+apiVersion: 1
+
+groups:
+  - orgId: 1
+    name: system-alerts
+    folder: Alerts
+    interval: 1m
+    ruleFiles:
+      - /etc/grafana/provisioning/alerting/alerting.yml
