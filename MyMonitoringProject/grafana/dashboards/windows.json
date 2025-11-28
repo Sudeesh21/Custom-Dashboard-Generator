@@ -19,7 +19,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
-  "id": 4,
+  "id": 2,
   "links": [
     {
       "asDropdown": true,
@@ -45,8 +45,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "name": "Prometheus"
+        "name": "Prometheus",
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -528,8 +528,8 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "windows_os_info{job=~\"$job\"} * on(instance) group_right(product) windows_os_hostname",
@@ -541,8 +541,8 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "time() - windows_system_boot_time_timestamp{job=~\"$job\"}",
@@ -554,8 +554,8 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "windows_cpu_logical_processor{job=~\"$job\"} - 0",
@@ -567,8 +567,8 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "avg by (instance) (windows_cpu_core_frequency_mhz{job=~\"$job\"})",
           "format": "table",
@@ -579,8 +579,8 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "100 - (avg by (instance) (irate(windows_cpu_time_total{job=~\"$job\",mode=\"idle\"}[2m])) * 100)",
           "format": "table",
@@ -591,8 +591,8 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "windows_memory_physical_total_bytes{job=~\"$job\"} - 0",
@@ -604,8 +604,8 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "100 - 100 * windows_memory_physical_free_bytes{job=~\"$job\"} / windows_memory_physical_total_bytes{job=~\"$job\"}",
@@ -617,8 +617,8 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "1 - (windows_logical_disk_free_bytes{job=~\"$job\",volume=~\"C:\"}/windows_logical_disk_size_bytes{job=~\"$job\",volume=~\"C:\"})",
           "format": "table",
@@ -629,8 +629,8 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "max by (instance) (1-windows_logical_disk_free_bytes{job=~\"$job\"}/windows_logical_disk_size_bytes{job=~\"$job\"})",
           "format": "table",
@@ -641,8 +641,8 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "windows_system_processes{job=~\"$job\"}",
@@ -654,8 +654,8 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "sum by (instance) (windows_service_state{job=~\"$job\",state=~\"running\"})",
           "format": "table",
@@ -670,8 +670,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "name": "Prometheus"
+        "name": "Prometheus",
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -730,7 +730,30 @@
           },
           "unit": "percent"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "cpu_usage_predicted_in_15_min"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "displayName",
+                "value": "AI Prediction (15m)"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 6,
@@ -761,14 +784,27 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "100 - (avg by (instance) (irate(windows_cpu_time_total{job=~\"$job\",mode=\"idle\"}[2m])) * 100)",
           "hide": false,
           "interval": "",
           "intervalFactor": 1,
           "legendFormat": "{{instance}}",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Prometheus"
+          },
+          "editorMode": "code",
+          "expr": "cpu_usage_predicted_in_15_min",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
           "refId": "B"
         }
       ],
@@ -777,8 +813,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "name": "Prometheus"
+        "name": "Prometheus",
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1042,8 +1078,8 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "100.0 - 100 * windows_memory_physical_free_bytes{job=~\"$job\"} / windows_memory_physical_total_bytes{job=~\"$job\"}",
@@ -1051,6 +1087,19 @@
           "interval": "",
           "legendFormat": "{{instance}}",
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Prometheus"
+          },
+          "editorMode": "code",
+          "expr": "memory_usage_predicted_in_15_min",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "B"
         }
       ],
       "title": "Memory Usage by Host",
@@ -1058,8 +1107,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "name": "Prometheus"
+        "name": "Prometheus",
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1111,13 +1160,38 @@
               },
               {
                 "color": "red",
-                "value": 80
+                "value": 79.9998
               }
             ]
           },
           "unit": "bps"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "host.docker.internal:9182_上传"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Network Upload"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "host.docker.internal:9182_Download"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Network Download"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 6,
@@ -1151,8 +1225,8 @@
             "filter": ""
           },
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "max by (instance) (irate(windows_net_bytes_sent_total{job=~\"$job\",nic!~'isatap.*|VPN.*'}[2m]))*8",
           "format": "time_series",
@@ -1183,8 +1257,8 @@
             "filter": ""
           },
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "-max by (instance) (irate(windows_net_bytes_received_total{job=~\"$job\",nic!~'isatap.*|VPN.*'}[2m]))*8",
           "format": "time_series",
@@ -1209,6 +1283,19 @@
           },
           "refId": "A",
           "step": 10
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Prometheus"
+          },
+          "editorMode": "code",
+          "expr": "network_usage_predicted_in_15_min",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "C"
         }
       ],
       "title": "Network details of the maximum traffic network card of each host",
@@ -1216,8 +1303,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "name": "Prometheus"
+        "name": "Prometheus",
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1309,8 +1396,8 @@
             "filter": ""
           },
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "-max by (instance) (irate(windows_logical_disk_read_bytes_total[2m]))",
           "format": "time_series",
@@ -1341,8 +1428,8 @@
             "filter": ""
           },
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "max by (instance) (irate(windows_logical_disk_write_bytes_total[2m]))",
           "format": "time_series",
@@ -1374,8 +1461,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "name": "Prometheus"
+        "name": "Prometheus",
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1467,8 +1554,8 @@
             "filter": ""
           },
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "-max by (instance) (irate(windows_logical_disk_reads_total[2m]))",
           "format": "time_series",
@@ -1499,8 +1586,8 @@
             "filter": ""
           },
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "max by (instance) (irate(windows_logical_disk_writes_total[2m]))",
           "format": "time_series",
@@ -1545,8 +1632,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "name": "Prometheus"
+        "name": "Prometheus",
+        "type": "prometheus"
       },
       "description": "",
       "fieldConfig": {
@@ -1614,8 +1701,8 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "time() - windows_system_system_up_time{job=~\"$job\",instance=~\"$instance\"}",
           "instant": false,
@@ -1629,8 +1716,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "name": "Prometheus"
+        "name": "Prometheus",
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1697,8 +1784,8 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "100 - (avg(irate(windows_cpu_time_total{job=~\"$job\",instance=~\"$instance\",mode=\"idle\"}[2m])))*100",
           "format": "time_series",
@@ -1713,8 +1800,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "name": "Prometheus"
+        "name": "Prometheus",
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1780,8 +1867,8 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "100 - (windows_logical_disk_free_bytes{job=~\"$job\",instance=~\"$instance\"} / windows_logical_disk_size_bytes{job=~\"$job\",instance=~\"$instance\"})*100",
           "instant": false,
@@ -1795,8 +1882,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "name": "Prometheus"
+        "name": "Prometheus",
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1947,8 +2034,8 @@
             "filter": ""
           },
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "sum(windows_service_state{job=~\"$job\",instance=~\"$instance\"}) by (state)",
           "format": "time_series",
@@ -1978,8 +2065,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "name": "Prometheus"
+        "name": "Prometheus",
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -2098,8 +2185,8 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "windows_system_processes{job=~\"$job\",instance=~\"$instance\"}",
@@ -2114,8 +2201,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "name": "Prometheus"
+        "name": "Prometheus",
+        "type": "prometheus"
       },
       "description": "",
       "fieldConfig": {
@@ -2183,8 +2270,8 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "windows_cpu_logical_processor{job=~\"$job\",instance=~\"$instance\"}",
@@ -2201,8 +2288,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "name": "Prometheus"
+        "name": "Prometheus",
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -2270,8 +2357,8 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "100 - (windows_memory_physical_free_bytes{job=~\"$job\",instance=~\"$instance\"} / windows_memory_physical_total_bytes{job=~\"$job\",instance=~\"$instance\"})*100",
@@ -2284,8 +2371,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "name": "Prometheus"
+        "name": "Prometheus",
+        "type": "prometheus"
       },
       "description": "",
       "fieldConfig": {
@@ -2353,8 +2440,8 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "windows_memory_physical_total_bytes{job=~\"$job\",instance=~\"$instance\"}",
@@ -2371,8 +2458,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "name": "Prometheus"
+        "name": "Prometheus",
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -2462,8 +2549,8 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "100 - avg(irate(windows_cpu_time_total{job=~\"$job\",instance=~\"$instance\",mode=\"idle\"}[5m]))*100",
           "hide": false,
@@ -2477,8 +2564,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "name": "Prometheus"
+        "name": "Prometheus",
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -2807,8 +2894,8 @@
             "filter": ""
           },
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "windows_memory_physical_total_bytes{job=~\"$job\",instance=~\"$instance\"}",
@@ -2841,8 +2928,8 @@
             "filter": ""
           },
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "windows_memory_physical_free_bytes{job=~\"$job\",instance=~\"$instance\"}",
@@ -2875,8 +2962,8 @@
             "filter": ""
           },
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "windows_memory_committed_bytes{job=~\"$job\",instance=~\"$instance\"}",
@@ -2905,8 +2992,8 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "windows_memory_commit_limit{job=~\"$job\",instance=~\"$instance\"}",
@@ -2922,8 +3009,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "name": "Prometheus"
+        "name": "Prometheus",
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -3048,8 +3135,8 @@
             "filter": ""
           },
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "windows_logical_disk_free_bytes{job=~\"$job\",instance=~\"$instance\"}",
           "format": "time_series",
@@ -3080,8 +3167,8 @@
             "filter": ""
           },
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "windows_logical_disk_size_bytes{job=~\"$job\",instance=~\"$instance\"}",
           "format": "time_series",
@@ -3113,8 +3200,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "name": "Prometheus"
+        "name": "Prometheus",
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -3207,8 +3294,8 @@
             "filter": ""
           },
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "irate(windows_net_bytes_sent_total{job=~\"$job\",instance=~\"$instance\",nic!~'isatap.*|VPN.*'}[5m])*8>0\r",
           "format": "time_series",
@@ -3239,8 +3326,8 @@
             "filter": ""
           },
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "irate(windows_net_bytes_received_total{job=~\"$job\",instance=~\"$instance\",nic!~'isatap.*|VPN.*'}[5m])*8\n",
           "format": "time_series",
@@ -3271,8 +3358,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "name": "Prometheus"
+        "name": "Prometheus",
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -3365,8 +3452,8 @@
             "filter": ""
           },
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "irate(windows_logical_disk_read_bytes_total{job=~\"$job\",instance=~\"$instance\"}[5m])\r",
           "format": "time_series",
@@ -3396,8 +3483,8 @@
             "filter": ""
           },
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "irate(windows_logical_disk_write_bytes_total{job=~\"$job\",instance=~\"$instance\"}[5m])\r",
           "format": "time_series",
@@ -3428,8 +3515,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "name": "Prometheus"
+        "name": "Prometheus",
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -3522,8 +3609,8 @@
             "filter": ""
           },
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "irate(windows_logical_disk_reads_total{job=~\"$job\",instance=~\"$instance\"}[5m])",
           "format": "time_series",
@@ -3553,8 +3640,8 @@
             "filter": ""
           },
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "irate(windows_logical_disk_writes_total{job=~\"$job\",instance=~\"$instance\"}[5m])",
           "format": "time_series",
@@ -3585,8 +3672,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "name": "Prometheus"
+        "name": "Prometheus",
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -3675,8 +3762,8 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "(irate(windows_net_bytes_total{job=~\"$job\",instance=~\"$instance\",nic!~'isatap.*|VPN.*'}[5m]) * 8 / windows_net_current_bandwidth_bytes{job=~\"$job\",instance=~\"$instance\",nic!~'isatap.*|VPN.*'}) * 100",
@@ -3690,8 +3777,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "name": "Prometheus"
+        "name": "Prometheus",
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -3781,8 +3868,8 @@
             "filter": ""
           },
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "irate(windows_net_packets_outbound_discarded_total{job=~\"$job\",instance=~\"$instance\", nic!~'isatap.*|VPN.*'}[5m]) + irate(windows_net_packets_outbound_errors_total{job=~\"$job\",instance=~\"$instance\"}[5m])",
@@ -3815,8 +3902,8 @@
             "filter": ""
           },
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "irate(windows_net_packets_received_discarded_total{job=~\"$job\",instance=~\"$instance\", nic!~'isatap.*|VPN.*'}[5m]) + irate(windows_net_packets_received_errors_total{job=~\"$job\",instance=~\"$instance\"}[5m])",
@@ -3850,8 +3937,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "name": "Prometheus"
+        "name": "Prometheus",
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -3941,8 +4028,8 @@
             "filter": ""
           },
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "windows_system_threads{job=~\"$job\",instance=~\"$instance\"}",
           "format": "time_series",
@@ -3974,8 +4061,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "name": "Prometheus"
+        "name": "Prometheus",
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -4066,8 +4153,8 @@
             "filter": ""
           },
           "datasource": {
-            "type": "prometheus",
-            "name": "Prometheus"
+            "name": "Prometheus",
+            "type": "prometheus"
           },
           "expr": "irate(windows_system_exception_dispatches_total{job=~\"$job\",instance=~\"$instance\"}[5m])",
           "format": "time_series",
@@ -4113,8 +4200,8 @@
           "value": "windows-pc"
         },
         "datasource": {
-          "type": "prometheus",
-          "name": "Prometheus"
+          "name": "Prometheus",
+          "type": "prometheus"
         },
         "definition": "label_values(windows_os_hostname,job)",
         "includeAll": false,
@@ -4137,8 +4224,8 @@
           "value": "$__all"
         },
         "datasource": {
-          "type": "prometheus",
-          "name": "Prometheus"
+          "name": "Prometheus",
+          "type": "prometheus"
         },
         "definition": "label_values(windows_os_hostname{job=~\"$job\"},hostname)",
         "includeAll": true,
@@ -4157,12 +4244,12 @@
       },
       {
         "current": {
-          "text": "localhost:9182",
-          "value": "localhost:9182"
+          "text": "host.docker.internal:9182",
+          "value": "host.docker.internal:9182"
         },
         "datasource": {
-          "type": "prometheus",
-          "name": "Prometheus"
+          "name": "Prometheus",
+          "type": "prometheus"
         },
         "definition": "label_values(windows_os_hostname{job=~\"$job\", hostname=~\"$hostname\"},instance)",
         "includeAll": false,
@@ -4181,12 +4268,12 @@
       },
       {
         "current": {
-          "text": "G6-ABP",
-          "value": "G6-ABP"
+          "text": "Sudeesh",
+          "value": "Sudeesh"
         },
         "datasource": {
-          "type": "prometheus",
-          "name": "Prometheus"
+          "name": "Prometheus",
+          "type": "prometheus"
         },
         "definition": "label_values(windows_os_hostname{job=~\"$job\", instance=~\"$instance\"},hostname)",
         "hide": 2,
@@ -4224,6 +4311,6 @@
   },
   "timezone": "",
   "title": "Windows Exporter Dashboard",
-  "ud": "Kdh0OoSGz",
+  "uid": "be99c892-f704-4db6-aba0-3996fe1edf72",
   "version": 2
 }
